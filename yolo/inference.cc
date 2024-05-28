@@ -29,7 +29,6 @@ void Inference::InitialModel(const std::string &model_path) {
 	short height = input_shape[1];
 	short width = input_shape[2];
 	model_input_shape_ = cv::Size2f(width, height);
-	std::cout << "model_input_shape: " << model_input_shape_ << std::endl;
 
   const std::vector<ov::Output<ov::Node>> outputs = model->outputs();
   const ov::Shape output_shape = outputs[0].get_shape();
@@ -37,7 +36,6 @@ void Inference::InitialModel(const std::string &model_path) {
 	height = output_shape[1];
 	width = output_shape[2];
 	model_output_shape_ = cv::Size(width, height);
-	std::cout << "model_output_shape: " << model_output_shape_ << std::endl;
 }
 
 std::vector<Detection> Inference::RunInference(const cv::Mat &frame) {
