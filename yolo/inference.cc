@@ -66,45 +66,21 @@ void Inference::PostProcessing() {
 
 	float *detections = inference_request_.get_output_tensor().data<float>();
 	const cv::Mat detection_outputs(model_output_shape_, CV_32F, (float *)detections);
-	// std::cout << "detection_outputs: " << detection_outputs << std::endl;
 
-	// std::cout << std::endl << "lmao_: " << std::endl;
-	// std::cout << detection_outputs.at<float>(0, 0) << ", ";
-	// std::cout << detection_outputs.at<float>(0, 1) << ", ";
-	// std::cout << detection_outputs.at<float>(0, 2) << ", ";
-	// std::cout << detection_outputs.at<float>(0, 3) << ", ";
-	// std::cout << detection_outputs.at<float>(0, 4) << ", ";
-	// std::cout << detection_outputs.at<float>(0, 5) << std::endl;
+	// 0  1  2  3      4          5
+	// x, y, w. h, confidence, class_id
 
 	for (int i = 0; i < detection_outputs.rows; ++i) {
-		// const cv::Mat classes_scores = detection_outputs.col(i).rowRange(4, detection_outputs.rows);
-
-		 double score = detection_outputs.at<float>(i, 4);
-		// double score = detection_outputs.at<float>(5, i);
-
-		//cv::minMaxLoc(classes_scores, nullptr, &score, nullptr, &class_id);
+		double score = detection_outputs.at<float>(i, 4);
 
 		if (score > model_score_threshold_) {
-			//class_list.push_back(detection_outputs.at<float>(i, 6));
 			class_list.push_back(detection_outputs.at<float>(i, 5));
 			confidence_list.push_back(score);
-
-			// const float x = detection_outputs.at<float>(i, 0);
-			// const float y = detection_outputs.at<float>(i, 1);
-			// const float w = detection_outputs.at<float>(i, 2);
-			// const float h = detection_outputs.at<float>(i, 3);
 
 			const float x = detection_outputs.at<float>(i, 0);
 			const float y = detection_outputs.at<float>(i, 1);
 			const float w = detection_outputs.at<float>(i, 2);
 			const float h = detection_outputs.at<float>(i, 3);
-
-			// std::cout << x << ", " << y << ", " << w  << ", " <<  h << ", " << score << ", " << detection_outputs.at<float>(i, 5) << std::endl;
-
-			// const float x = detection_outputs.at<float>(0, i);
-			// const float y = detection_outputs.at<float>(1, i);
-			// const float w = detection_outputs.at<float>(2, i);
-			// const float h = detection_outputs.at<float>(3, i);
 
 			cv::Rect box;
 
