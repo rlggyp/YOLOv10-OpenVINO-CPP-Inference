@@ -1,5 +1,5 @@
 # YOLOv10 OpenVINO Inference C++
-Implementing YOLOv8 object detection using OpenVINO for efficient and accurate real-time inference.
+Implementing YOLOv10 object detection using OpenVINO for efficient and accurate real-time inference.
 
 ## Dependencies
 | Dependency | Version  |
@@ -14,7 +14,7 @@ Implementing YOLOv8 object detection using OpenVINO for efficient and accurate r
 - [Supported models by OpenVINO](https://docs.openvino.ai/2023.3/openvino_docs_OV_UG_Integrate_OV_with_your_application.html)
 - [YOLOv10 exporter](YOLOv10_exporter.ipynb)
 
-## Install Dependency
+## Install Dependencies
 ```bash
 apt-get update
 apt-get install -y \
@@ -69,6 +69,9 @@ make
 # run this command if you are using an OpenVINO model format
 ./detect <model_path.xml> <image_path> 
 ```
+<img src="assets/result_bus.png" alt="bus" width="500"/>
+<img src="assets/result_zidane.png" alt="zidane" width="665"/>
+
 ## Contributing
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
 
