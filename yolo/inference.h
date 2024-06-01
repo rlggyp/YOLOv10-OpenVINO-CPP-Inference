@@ -41,8 +41,7 @@ class Inference {
 
 	std::vector<Detection> detections_;
 
-	float model_score_threshold_;
-	float model_NMS_threshold_;
+	float model_confidence_threshold_;
 };
 } // namespace yolo
 
