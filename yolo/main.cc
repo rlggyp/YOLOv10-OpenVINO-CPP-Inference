@@ -20,7 +20,9 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	yolo::Inference inference(model_path);
+	const float confidence_threshold = 0.5;
+
+	yolo::Inference inference(model_path, confidence_threshold);
 	std::vector<yolo::Detection> detections = inference.RunInference(image);
 
 	DrawDetectedObject(image, detections);

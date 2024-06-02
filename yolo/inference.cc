@@ -3,14 +3,45 @@
 #include <memory>
 
 namespace yolo {
-Inference::Inference(const std::string &model_path) {
-	model_confidence_threshold_ = 0.75;
+Inference::Inference(const std::string &model_path, const float &model_confidence_threshold) {
+	model_input_shape_ = cv::Size(640, 640); // default size for dynamic model, prevent error
+	model_confidence_threshold_ = model_confidence_threshold;
+	InitialModel(model_path);
+}
+
+// if model dynamic, we need to set input shape
+Inference::Inference(const std::string &model_path, const cv::Size model_input_shape, const float &model_confidence_threshold) {
+	model_input_shape_ = model_input_shape;
+	model_confidence_threshold_ = model_confidence_threshold;
+
 	InitialModel(model_path);
 }
 
 void Inference::InitialModel(const std::string &model_path) {
 	ov::Core core;
 	std::shared_ptr<ov::Model> model = core.read_model(model_path);
+
+	short width, height;
+
+	if (model->is_dynamic()) {
+		model->reshape({1, 3, static_cast<long int>(model_input_shape_.height), static_cast<long int>(model_input_shape_.width)});
+	} else {
+		// get input shape from model
+  	const std::vector<ov::Output<ov::Node>> inputs = model->inputs();
+  	const ov::Shape input_shape = inputs[0].get_shape();
+
+		height = input_shape[1];
+		width = input_shape[2];
+		model_input_shape_ = cv::Size2f(width, height);
+	}
+
+  const std::vector<ov::Output<ov::Node>> outputs = model->outputs();
+  const ov::Shape output_shape = outputs[0].get_shape();
+
+	height = output_shape[1];
+	width = output_shape[2];
+	model_output_shape_ = cv::Size(width, height);
+
 	ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
 
   ppp.input().tensor().set_element_type(ov::element::u8).set_layout("NHWC").set_color_format(ov::preprocess::ColorFormat::BGR);
@@ -19,22 +50,8 @@ void Inference::InitialModel(const std::string &model_path) {
   ppp.output().tensor().set_element_type(ov::element::f32);
 
   model = ppp.build();
-	compiled_model_ = core.compile_model(model, "CPU");
+	compiled_model_ = core.compile_model(model, "AUTO");
 	inference_request_ = compiled_model_.create_infer_request();
-
-  const std::vector<ov::Output<ov::Node>> inputs = model->inputs();
-  const ov::Shape input_shape = inputs[0].get_shape();
-
-	short height = input_shape[1];
-	short width = input_shape[2];
-	model_input_shape_ = cv::Size2f(width, height);
-
-  const std::vector<ov::Output<ov::Node>> outputs = model->outputs();
-  const ov::Shape output_shape = outputs[0].get_shape();
-
-	height = output_shape[1];
-	width = output_shape[2];
-	model_output_shape_ = cv::Size(width, height);
 }
 
 std::vector<Detection> Inference::RunInference(const cv::Mat &frame) {
@@ -59,6 +76,8 @@ void Inference::Preprocessing(const cv::Mat &frame) {
 void Inference::PostProcessing() {
 	float *detections = inference_request_.get_output_tensor().data<float>();
 	const cv::Mat detection_outputs(model_output_shape_, CV_32F, (float *)detections);
+
+	detections_.clear();
 
 	// 0  1  2  3      4          5
 	// x, y, w. h, confidence, class_id
