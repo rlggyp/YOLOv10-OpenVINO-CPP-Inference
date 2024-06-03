@@ -1,10 +1,10 @@
 # YOLOv10 OpenVINO Inference C++
-Implementing YOLOv10 object detection using OpenVINO for efficient and accurate real-time inference.
+Implementing YOLOv10 object detection using OpenVINO for efficient and accurate real-time inference in C++. 
 
 ## Dependencies
 | Dependency | Version  |
 | ---------- | -------- |
-| OpenVINO   | >=2023.3   |
+| OpenVINO   | >=2023.3 |
 | OpenCV     | >=4.5.0  |
 | C++        | >=14     |
 | CMake      | >=3.12.0 |
@@ -14,7 +14,13 @@ Implementing YOLOv10 object detection using OpenVINO for efficient and accurate 
 - [Supported models by OpenVINO](https://docs.openvino.ai/2023.3/openvino_docs_OV_UG_Integrate_OV_with_your_application.html)
 - [YOLOv10 exporter](YOLOv10_exporter.ipynb)
 
-## Install Dependencies
+## Installation Options
+
+You have two options for setting up the environment: manually installing dependencies or using Docker.
+
+### Option 1: Manual Installation
+
+#### Install Dependencies
 ```bash
 apt-get update
 apt-get install -y \
@@ -35,7 +41,8 @@ apt-get install -y \
     python3-pip \
     libpython3.8
 ```
-## Install OpenVINO
+
+#### Install OpenVINO
 You can download another version of OpenVINO at this [link](https://storage.openvinotoolkit.org/repositories/openvino/packages/2023.3/linux).
 ```bash
 wget -O openvino.tgz https://storage.openvinotoolkit.org/repositories/openvino/packages/2023.3/linux/l_openvino_toolkit_ubuntu20_2023.3.0.13775.ceeafaf64f3_x86_64.tgz && \
@@ -50,6 +57,20 @@ sudo rm openvino.tgz
 sudo mv l_openvino* openvino
 ```
 
+### Option 2: Using Docker
+
+#### Building the Docker Image
+To build the Docker image yourself, use the following command:
+```bash
+docker build . -t yolov10
+```
+
+#### Pulling the Docker Image
+Alternatively, you can pull the pre-built Docker image from Docker Hub:
+```bash
+docker pull docker.io/rlggyp/yolov10
+```
+
 ## Build 
 ```bash
 git clone https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference.git
@@ -59,18 +80,20 @@ mkdir build
 cd build
 cmake ..
 make
-
 ```
+
 ## Usage
 ```bash
 # run this command if you are using an ONNX model format
 ./detect <model_path.onnx> <image_path> 
 
-# run this command if you are using an OpenVINO model format
+# or
+
+# run this command if you are using an OpenVINO IR model format
 ./detect <model_path.xml> <image_path> 
 ```
-<img src="assets/result_bus.png" alt="bus" width="500"/>
-<img src="assets/result_zidane.png" alt="zidane" width="665"/>
+![result_bus](assets/result_bus.png)
+![result_zidane](assets/result_zidane.png)
 
 ## Contributing
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
