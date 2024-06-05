@@ -1,13 +1,20 @@
 # YOLOv10 OpenVINO Inference C++
-Implementing YOLOv10 object detection using OpenVINO for efficient and accurate real-time inference in C++. 
+
+Implementing YOLOv10 object detection using OpenVINO for efficient and accurate real-time inference in C++.
+
+## Features
+- [x] Support for `ONNX` and `OpenVINO IR` model formats
+- [x] Support for `FP32` and `INT8` precisions
+
+Tested on Ubuntu `18.04`, `20.04`, `22.04`.
 
 ## Dependencies
 | Dependency | Version  |
 | ---------- | -------- |
 | OpenVINO   | >=2023.3 |
-| OpenCV     | >=4.5.0  |
+| OpenCV     | >=3.2.0  |
 | C++        | >=14     |
-| CMake      | >=3.12.0 |
+| CMake      | >=3.10.2 |
 
 ## Model Conversion Resources
 - [Docs by Ultralytics](https://docs.ultralytics.com/integrations/openvino/#usage-examples)
@@ -18,7 +25,8 @@ Implementing YOLOv10 object detection using OpenVINO for efficient and accurate 
 
 You have two options for setting up the environment: manually installing dependencies or using Docker.
 
-### Option 1: Manual Installation
+<details>
+  <summary>Option 1: Manual Installation</summary>
 
 #### Install Dependencies
 ```bash
@@ -43,21 +51,20 @@ apt-get install -y \
 ```
 
 #### Install OpenVINO
-You can download another version of OpenVINO at this [link](https://storage.openvinotoolkit.org/repositories/openvino/packages/2023.3/linux).
+You can download OpenVINO from [here](https://storage.openvinotoolkit.org/repositories/openvino/packages/2023.3/linux).
 ```bash
 wget -O openvino.tgz https://storage.openvinotoolkit.org/repositories/openvino/packages/2023.3/linux/l_openvino_toolkit_ubuntu20_2023.3.0.13775.ceeafaf64f3_x86_64.tgz && \
-
 sudo mkdir /opt/intel
 sudo mv openvino.tgz /opt/intel/
-
 cd /opt/intel
-
 sudo tar -xvf openvino.tgz
 sudo rm openvino.tgz
 sudo mv l_openvino* openvino
 ```
+</details>
 
-### Option 2: Using Docker
+<details>
+  <summary>Option 2: Using Docker</summary>
 
 #### Building the Docker Image
 To build the Docker image yourself, use the following command:
@@ -66,10 +73,27 @@ docker build . -t yolov10
 ```
 
 #### Pulling the Docker Image
-Alternatively, you can pull the pre-built Docker image from Docker Hub:
+Alternatively, you can pull the pre-built Docker image from Docker Hub (available for Ubuntu 18.04, 20.04, and 22.04):
 ```bash
-docker pull docker.io/rlggyp/yolov10
+docker pull rlggyp/yolov10:18.04
+docker pull rlggyp/yolov10:20.04
+docker pull rlggyp/yolov10:22.04
 ```
+
+For detailed usage information, please visit the [Docker Hub repository page](https://hub.docker.com/repository/docker/rlggyp/yolov10/general).
+
+#### Running a Container
+To run a container from the image, use the following `docker run` command:
+
+```bash
+docker run -it --rm --mount type=bind,src=$(pwd),dst=/repo \
+    --env DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -w /repo \
+    rlggyp/yolov10:<tag>
+```
+
+</details>
 
 ## Build 
 ```bash
@@ -84,12 +108,10 @@ make
 
 ## Usage
 ```bash
-# run this command if you are using an ONNX model format
+# Run this command if you are using an ONNX model format
 ./detect <model_path.onnx> <image_path> 
-
-# or
-
-# run this command if you are using an OpenVINO IR model format
+# Or
+# Run this command if you are using an OpenVINO IR model format
 ./detect <model_path.xml> <image_path> 
 ```
 ![result_bus](assets/result_bus.png)

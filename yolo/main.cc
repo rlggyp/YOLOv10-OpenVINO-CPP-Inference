@@ -5,13 +5,13 @@
 void DrawDetectedObject(cv::Mat &frame, const std::vector<yolo::Detection> &detections);
 
 int main(int argc, char **argv) {
-	if (argc < 3) {
+	if (argc != 3) {
 		std::cerr << "usage: " << argv[0] << " <model_path> <image_path>" << std::endl;
 		return 1;
 	}
 
-	std::string model_path = argv[1];
-	std::string image_path = argv[2];
+	const std::string model_path = argv[1];
+	const std::string image_path = argv[2];
 
 	cv::Mat image = cv::imread(image_path);
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 	DrawDetectedObject(image, detections);
 	imshow("result", image);
 
-	char escape_key = 27;
+	const char escape_key = 27;
 
 	while (cv::waitKey(0) != escape_key);
 
