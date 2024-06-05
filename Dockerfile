@@ -6,6 +6,9 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 # Install necessary packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
     libtbb2 \
+    git \
+    vim \
+    nano \
     cmake \
     wget \
     libopencv-dev \
