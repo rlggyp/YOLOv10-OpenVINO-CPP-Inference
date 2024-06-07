@@ -81,6 +81,10 @@ docker pull rlggyp/yolov10:22.04
 For detailed usage information, please visit the [Docker Hub repository page](https://hub.docker.com/repository/docker/rlggyp/yolov10/general).
 
 #### Running a Container
+Grant the Docker container access to the X server by running the following command:
+```bash
+xhost +local:docker
+````
 To run a container from the image, use the following `docker run` command:
 
 ```bash

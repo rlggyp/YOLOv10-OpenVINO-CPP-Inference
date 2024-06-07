@@ -51,8 +51,8 @@ std::vector<std::string> GetClassNameFromMetadata(const std::string &metadata_pa
 		return {};
 	}
 
-	for (YAML::const_iterator it = metadata["names"].begin(); it != metadata["names"].end(); ++it) {
-		std::string class_name = it->second.as<std::string>();
+	for (int i = 0; i < metadata["names"].size(); ++i) {
+		std::string class_name = metadata["names"][std::to_string(i)].as<std::string>();
 		class_names.push_back(class_name);
 	}
 
