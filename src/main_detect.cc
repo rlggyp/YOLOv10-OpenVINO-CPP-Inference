@@ -13,6 +13,10 @@ int main(int argc, char **argv) {
 	const std::string model_path = argv[1];
 	const std::string image_path = argv[2];
 
+  std::size_t pos = model_path.find_last_of("/");
+	std::string metadata_path = model_path.substr(0, pos + 1) + "metadata.yaml";
+	std::vector<std::string> class_names = GetClassNameFromMetadata(metadata_path);
+
 	cv::Mat image = cv::imread(image_path);
 
 	if (image.empty()) {
@@ -25,7 +29,7 @@ int main(int argc, char **argv) {
 	yolo::Inference inference(model_path, confidence_threshold);
 	std::vector<yolo::Detection> detections = inference.RunInference(image);
 
-	DrawDetectedObject(image, detections);
+	DrawDetectedObject(image, detections, class_names);
 	imshow("image", image);
 
 	const char escape_key = 27;

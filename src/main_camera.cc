@@ -13,6 +13,10 @@ int main(int argc, char **argv) {
 	const std::string model_path = argv[1];
 	int camera_index = std::stoi(argv[2]);
 
+  std::size_t pos = model_path.find_last_of("/");
+	std::string metadata_path = model_path.substr(0, pos + 1) + "metadata.yaml";
+	std::vector<std::string> class_names = GetClassNameFromMetadata(metadata_path);
+
 	cv::VideoCapture capture(camera_index);
 
 	if (!capture.isOpened()) {
@@ -38,7 +42,7 @@ int main(int argc, char **argv) {
 
 		std::vector<yolo::Detection> detections = inference.RunInference(frame);
 
-		DrawDetectedObject(frame, detections);
+		DrawDetectedObject(frame, detections, class_names);
 
 		cv::imshow("camera", frame);
 

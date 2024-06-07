@@ -29,6 +29,9 @@ apt-get update
 apt-get install -y \
     libtbb2 \
     cmake \
+    make \
+    git \
+    libyaml-cpp-dev \
     wget \
     libopencv-dev \
     pkg-config \
@@ -84,6 +87,7 @@ To run a container from the image, use the following `docker run` command:
 docker run -it --rm --mount type=bind,src=$(pwd),dst=/repo \
     --env DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v /dev:/dev \
     -w /repo \
     rlggyp/yolov10:<tag>
 ```
@@ -93,7 +97,7 @@ docker run -it --rm --mount type=bind,src=$(pwd),dst=/repo \
 ## Build 
 ```bash
 git clone https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference.git
-cd YOLOv10-OpenVINO-CPP-Inference/yolo
+cd YOLOv10-OpenVINO-CPP-Inference/src
 
 mkdir build
 cd build
@@ -106,13 +110,26 @@ Yo can download the YOLOv10 model from here: [ONNX](https://github.com/rlggyp/YO
 [OpenVINO IR FP32](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_fp32_openvino.zip), 
 [OpenVINO IR FP16](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_fp16_openvino.zip), 
 [OpenVINO IR INT8](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_int8_openvino.zip)
+### Using an ONNX Model Format
 ```bash
-# Run this command if you are using an ONNX model format
-./detect <model_path.onnx> <image_path> 
-# Or
-# Run this command if you are using an OpenVINO IR model format
-./detect <model_path.xml> <image_path> 
+# For video input: 
+./video <model_path.onnx> <video_path>
+# For image input: 
+./detect <model_path.onnx> <image_path>
+# For real-time inference with a camera: 
+./camera <model_path.onnx> <camera_index>
 ```
+
+### Using an OpenVINO IR Model Format
+```bash
+# For video input: 
+./video <model_path.xml> <video_path>
+# For image input: 
+./detect <model_path.xml> <image_path>
+# For real-time inference with a camera: 
+./camera <model_path.xml> <camera_index>
+```
+
 ![result_bus](assets/result_bus.png)
 ![result_zidane](assets/result_zidane.png)
 
