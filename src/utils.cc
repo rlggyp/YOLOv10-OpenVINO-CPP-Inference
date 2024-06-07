@@ -1,26 +1,60 @@
 #include "utils.h"
 
+#include <fstream>
 #include <random>
+#include <yaml-cpp/yaml.h>
 
-void DrawDetectedObject(cv::Mat &frame, const std::vector<yolo::Detection> &detections) {
-	for (int i = 0; i < detections.size(); ++i) {
-		yolo::Detection detection = detections[i];
-		cv::Rect box = detection.box;
-		float confidence = detection.confidence;
-		int class_id = detection.class_id;
 
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_int_distribution<int> dis(120, 255);
-		cv::Scalar color = cv::Scalar(dis(gen),
-				dis(gen),
-				dis(gen));
-		cv::rectangle(frame, cv::Point(box.x, box.y), cv::Point(box.x + box.width, box.y + box.height), color, 3);
+void DrawDetectedObject(cv::Mat &frame, const std::vector<yolo::Detection> &detections, const std::vector<std::string> &class_names) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dis(120, 255);
+	
+	for (const auto &detection : detections) {
+		const cv::Rect &box = detection.box;
+		const float &confidence = detection.confidence;
+		const int &class_id = detection.class_id;
+		
+		const cv::Scalar color = cv::Scalar(dis(gen), dis(gen), dis(gen));
+		cv::rectangle(frame, box, color, 3);
 
-		std::string classString = "id(" + std::to_string(class_id) + ')' + std::to_string(confidence).substr(0, 4);
-		cv::Size textSize = cv::getTextSize(classString, cv::FONT_HERSHEY_DUPLEX, 0.75, 2, 0);
-		cv::Rect textBox(box.x, box.y - 40, textSize.width + 10, textSize.height + 20);
-		cv::rectangle(frame, textBox, color, cv::FILLED);
-		cv::putText(frame, classString, cv::Point(box.x + 5, box.y - 10), cv::FONT_HERSHEY_DUPLEX, 0.75, cv::Scalar(0, 0, 0), 2, 0);
+		std::string class_string;
+
+		if (class_names.empty())
+			class_string = "id[" + std::to_string(class_id) + "] " + std::to_string(confidence).substr(0, 4);
+		else
+			class_string = class_names[class_id] + " " + std::to_string(confidence).substr(0, 4);
+		
+		const cv::Size text_size = cv::getTextSize(class_string, cv::FONT_HERSHEY_SIMPLEX, 0.6, 2, 0);
+		const cv::Rect text_box(box.x - 2, box.y - 27, text_size.width + 10, text_size.height + 15);
+		
+		cv::rectangle(frame, text_box, color, cv::FILLED);
+		cv::putText(frame, class_string, cv::Point(box.x + 5, box.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0, 0, 0), 2, 0);
 	}
+}
+
+std::vector<std::string> GetClassNameFromMetadata(const std::string &metadata_path) {
+	std::ifstream check_file(metadata_path);
+
+	if (!check_file.is_open()) {
+		std::cerr << "Unable to open file: " << metadata_path << std::endl;
+		return {};
+	}
+
+	check_file.close();
+
+	YAML::Node metadata = YAML::LoadFile(metadata_path);
+	std::vector<std::string> class_names;
+
+	if (!metadata["names"]) {
+		std::cerr << "ERROR: 'names' node not found in the YAML file" << std::endl;
+		return {};
+	}
+
+	for (YAML::const_iterator it = metadata["names"].begin(); it != metadata["names"].end(); ++it) {
+		std::string class_name = it->second.as<std::string>();
+		class_names.push_back(class_name);
+	}
+
+	return class_names;
 }
