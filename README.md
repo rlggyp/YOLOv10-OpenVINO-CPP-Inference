@@ -4,7 +4,7 @@ Implementing YOLOv10 object detection using OpenVINO for efficient and accurate 
 
 ## Features
 - [x] Support for `ONNX` and `OpenVINO IR` model formats
-- [x] Support for `FP32` and `INT8` precisions
+- [x] Support for `FP32`, `FP16` and `INT8` precisions
 
 Tested on Ubuntu `18.04`, `20.04`, `22.04`.
 
@@ -16,17 +16,12 @@ Tested on Ubuntu `18.04`, `20.04`, `22.04`.
 | C++        | >=14     |
 | CMake      | >=3.10.2 |
 
-## Model Conversion Resources
-- [Docs by Ultralytics](https://docs.ultralytics.com/integrations/openvino/#usage-examples)
-- [Supported models by OpenVINO](https://docs.openvino.ai/2023.3/openvino_docs_OV_UG_Integrate_OV_with_your_application.html)
-- [YOLOv10 exporter](YOLOv10_exporter.ipynb)
-
 ## Installation Options
 
 You have two options for setting up the environment: manually installing dependencies or using Docker.
 
 <details>
-  <summary>Option 1: Manual Installation</summary>
+  <summary><b>Manual Installation</b></summary>
 
 #### Install Dependencies
 ```bash
@@ -64,7 +59,7 @@ sudo mv l_openvino* openvino
 </details>
 
 <details>
-  <summary>Option 2: Using Docker</summary>
+  <summary><b>Using Docker</b></summary>
 
 #### Building the Docker Image
 To build the Docker image yourself, use the following command:
@@ -109,6 +104,7 @@ make
 ## Usage
 Yo can download the YOLOv10 model from here: [ONNX](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n.onnx), 
 [OpenVINO IR FP32](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_fp32_openvino.zip), 
+[OpenVINO IR FP16](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_fp16_openvino.zip), 
 [OpenVINO IR INT8](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_int8_openvino.zip)
 ```bash
 # Run this command if you are using an ONNX model format
@@ -119,6 +115,14 @@ Yo can download the YOLOv10 model from here: [ONNX](https://github.com/rlggyp/YO
 ```
 ![result_bus](assets/result_bus.png)
 ![result_zidane](assets/result_zidane.png)
+
+## References
+- [How to export the YOLOv10 model](https://github.com/THU-MIG/yolov10?tab=readme-ov-file#export)
+- [Convert and Optimize YOLOv10 with OpenVINO](https://github.com/openvinotoolkit/openvino_notebooks/blob/latest/notebooks/yolov10-optimization/yolov10-optimization.ipynb)
+- [Exporting the model into OpenVINO format](https://docs.ultralytics.com/integrations/openvino/#usage-examples)
+- [Model Export with Ultralytics YOLO](https://docs.ultralytics.com/modes/export/)
+- [Supported models by OpenVINO](https://docs.openvino.ai/2023.3/openvino_docs_OV_UG_Integrate_OV_with_your_application.html#step-2-compile-the-model)
+- [YOLOv10 exporter notebooks](notebooks/YOLOv10_exporter.ipynb)
 
 ## Contributing
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
