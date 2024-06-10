@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 	std::vector<yolo::Detection> detections = inference.RunInference(image);
 
 	DrawDetectedObject(image, detections, class_names);
-	imshow("image", image);
+	cv::imshow("image", image);
 
 	const char escape_key = 27;
 

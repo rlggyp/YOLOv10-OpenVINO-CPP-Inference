@@ -133,9 +133,11 @@ Yo can download the YOLOv10 model from here: [ONNX](https://github.com/rlggyp/YO
 # For real-time inference with a camera: 
 ./camera <model_path.xml> <camera_index>
 ```
-
-![result_bus](assets/result_bus.png)
-![result_zidane](assets/result_zidane.png)
+<p align="center"> 
+  <img alt="traffic_gif" src="assets/traffic.gif", width="80%">
+  <img alt="result_bus" src="assets/result_bus.png", width="80%">
+  <img alt="result_zidane" src="assets/result_zidane.png", width="80%">
+</p>
 
 ## References
 - [How to export the YOLOv10 model](https://github.com/THU-MIG/yolov10?tab=readme-ov-file#export)

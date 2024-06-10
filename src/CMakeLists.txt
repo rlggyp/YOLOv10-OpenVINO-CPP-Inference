@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(YOLOv10_OpenVINO)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 find_package(OpenCV REQUIRED)
 find_package(yaml-cpp REQUIRED)
