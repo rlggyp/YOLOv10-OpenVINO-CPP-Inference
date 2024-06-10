@@ -62,37 +62,38 @@ std::vector<Detection> Inference::RunInference(const cv::Mat &frame) {
 }
 
 void Inference::Preprocessing(const cv::Mat &frame) {
-	cv::resize(frame, resized_frame_, model_input_shape_, 0, 0, cv::INTER_AREA);
+	cv::Mat resized_frame;
+	cv::resize(frame, resized_frame, model_input_shape_, 0, 0, cv::INTER_AREA);
 
 	factor_.x = static_cast<float>(frame.cols / model_input_shape_.width);
 	factor_.y = static_cast<float>(frame.rows / model_input_shape_.height);
 
-	float *input_data = (float *)resized_frame_.data;
-	input_tensor_ = ov::Tensor(compiled_model_.input().get_element_type(), compiled_model_.input().get_shape(), input_data);
-	inference_request_.set_input_tensor(input_tensor_);
+	float *input_data = (float *)resized_frame.data;
+	const ov::Tensor input_tensor = ov::Tensor(compiled_model_.input().get_element_type(), compiled_model_.input().get_shape(), input_data);
+	inference_request_.set_input_tensor(input_tensor);
 }
 
 void Inference::PostProcessing() {
-	float *detections = inference_request_.get_output_tensor().data<float>();
-	const cv::Mat detection_outputs(model_output_shape_, CV_32F, (float *)detections);
-
+	const float *detections = inference_request_.get_output_tensor().data<const float>();
 	detections_.clear();
 
 	// 0  1  2  3      4          5
 	// x, y, w. h, confidence, class_id
 
-	for (int i = 0; i < detection_outputs.rows; ++i) {
-		double confidence = detection_outputs.at<float>(i, 4);
+	for (unsigned int i = 0; i < model_output_shape_.height; ++i) {
+		const unsigned int index = i * model_output_shape_.width;
+
+		const float confidence = detections[index + 4];
 
 		if (confidence > model_confidence_threshold_) {
-			const float x = detection_outputs.at<float>(i, 0);
-			const float y = detection_outputs.at<float>(i, 1);
-			const float w = detection_outputs.at<float>(i, 2);
-			const float h = detection_outputs.at<float>(i, 3);
+			const float x = detections[index + 0];
+			const float y = detections[index + 1];
+			const float w = detections[index + 2];
+			const float h = detections[index + 3];
 
 			Detection result;
 
-			result.class_id = static_cast<short>(detection_outputs.at<float>(i, 5));
+			result.class_id = static_cast<const short>(detections[index + 5]);
 			result.confidence = confidence;
 			result.box = GetBoundingBox(cv::Rect(x, y, w, h));
 
@@ -101,7 +102,7 @@ void Inference::PostProcessing() {
 	}
 }
 
-cv::Rect Inference::GetBoundingBox(const cv::Rect &src) {
+cv::Rect Inference::GetBoundingBox(const cv::Rect &src) const {
 	cv::Rect box = src;
 
 	box.width = (box.width - box.x) * factor_.x;
