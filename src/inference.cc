@@ -65,8 +65,8 @@ void Inference::Preprocessing(const cv::Mat &frame) {
 	cv::Mat resized_frame;
 	cv::resize(frame, resized_frame, model_input_shape_, 0, 0, cv::INTER_AREA);
 
-	factor_.x = static_cast<float>(frame.cols / model_input_shape_.width);
-	factor_.y = static_cast<float>(frame.rows / model_input_shape_.height);
+	scale_factor_.x = static_cast<float>(frame.cols / model_input_shape_.width);
+	scale_factor_.y = static_cast<float>(frame.rows / model_input_shape_.height);
 
 	float *input_data = (float *)resized_frame.data;
 	const ov::Tensor input_tensor = ov::Tensor(compiled_model_.input().get_element_type(), compiled_model_.input().get_shape(), input_data);
@@ -77,19 +77,21 @@ void Inference::PostProcessing() {
 	const float *detections = inference_request_.get_output_tensor().data<const float>();
 	detections_.clear();
 
-	// 0  1  2  3      4          5
-	// x, y, w. h, confidence, class_id
+	/*
+	* 0  1  2  3      4          5
+	* x, y, w. h, confidence, class_id
+	*/
 
 	for (unsigned int i = 0; i < model_output_shape_.height; ++i) {
 		const unsigned int index = i * model_output_shape_.width;
 
-		const float confidence = detections[index + 4];
+		const float &confidence = detections[index + 4];
 
 		if (confidence > model_confidence_threshold_) {
-			const float x = detections[index + 0];
-			const float y = detections[index + 1];
-			const float w = detections[index + 2];
-			const float h = detections[index + 3];
+			const float &x = detections[index + 0];
+			const float &y = detections[index + 1];
+			const float &w = detections[index + 2];
+			const float &h = detections[index + 3];
 
 			Detection result;
 
@@ -105,11 +107,11 @@ void Inference::PostProcessing() {
 cv::Rect Inference::GetBoundingBox(const cv::Rect &src) const {
 	cv::Rect box = src;
 
-	box.width = (box.width - box.x) * factor_.x;
-	box.height = (box.height - box.y) * factor_.y;
+	box.width = (box.width - box.x) * scale_factor_.x;
+	box.height = (box.height - box.y) * scale_factor_.y;
 
-	box.x *= factor_.x;
-	box.y *= factor_.y;
+	box.x *= scale_factor_.x;
+	box.y *= scale_factor_.y;
 	
 	return box;
 }

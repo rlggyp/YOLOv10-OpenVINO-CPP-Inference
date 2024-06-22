@@ -28,7 +28,7 @@ class Inference {
 	void PostProcessing();
 	cv::Rect GetBoundingBox(const cv::Rect &src) const;
 
-	cv::Point2f factor_;
+	cv::Point2f scale_factor_;
 	cv::Size2f model_input_shape_;
 	cv::Size model_output_shape_;
 

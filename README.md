@@ -5,6 +5,7 @@ Implementing YOLOv10 object detection using OpenVINO for efficient and accurate 
 ## Features
 - [x] Support for `ONNX` and `OpenVINO IR` model formats
 - [x] Support for `FP32`, `FP16` and `INT8` precisions
+- [x] Support for loading model with dynamic shape
 
 Tested on Ubuntu `18.04`, `20.04`, `22.04`.
 

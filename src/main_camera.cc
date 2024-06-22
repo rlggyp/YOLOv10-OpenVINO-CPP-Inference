@@ -1,21 +1,22 @@
 #include "inference.h"
 #include "utils.h"
 
+#include <cstdint>
 #include <iostream>
 #include <opencv2/highgui.hpp>
 
-int main(int argc, char **argv) {
+int main(const int argc, const char **argv) {
 	if (argc != 3) {
 		std::cerr << "usage: " << argv[0] << " <model_path> <camera_index>" << std::endl;
 		return 1;
 	}
 
 	const std::string model_path = argv[1];
-	int camera_index = std::stoi(argv[2]);
+	const uint8_t camera_index = std::stoi(argv[2]);
 
-  std::size_t pos = model_path.find_last_of("/");
-	std::string metadata_path = model_path.substr(0, pos + 1) + "metadata.yaml";
-	std::vector<std::string> class_names = GetClassNameFromMetadata(metadata_path);
+  const std::size_t pos = model_path.find_last_of("/");
+	const std::string metadata_path = model_path.substr(0, pos + 1) + "metadata.yaml";
+	const std::vector<std::string> class_names = GetClassNameFromMetadata(metadata_path);
 
 	cv::VideoCapture capture(camera_index);
 

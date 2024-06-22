@@ -4,7 +4,7 @@
 #include <iostream>
 #include <opencv2/highgui.hpp>
 
-int main(int argc, char **argv) {
+int main(const int argc, const char **argv) {
 	if (argc != 3) {
 		std::cerr << "usage: " << argv[0] << " <model_path> <video_path>" << std::endl;
 		return 1;
@@ -13,9 +13,9 @@ int main(int argc, char **argv) {
 	const std::string model_path = argv[1];
 	const std::string video_path = argv[2];
 
-  std::size_t pos = model_path.find_last_of("/");
-	std::string metadata_path = model_path.substr(0, pos + 1) + "metadata.yaml";
-	std::vector<std::string> class_names = GetClassNameFromMetadata(metadata_path);
+  const std::size_t pos = model_path.find_last_of("/");
+	const std::string metadata_path = model_path.substr(0, pos + 1) + "metadata.yaml";
+	const std::vector<std::string> class_names = GetClassNameFromMetadata(metadata_path);
 
 	cv::VideoCapture capture(video_path);
 
