@@ -111,7 +111,7 @@ make
 ```
 
 ## Usage
-Yo can download the YOLOv10 model from here: [ONNX](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n.onnx), 
+You can download the YOLOv10 model from here: [ONNX](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n.onnx), 
 [OpenVINO IR FP32](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_fp32_openvino.zip), 
 [OpenVINO IR FP16](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_fp16_openvino.zip), 
 [OpenVINO IR INT8](https://github.com/rlggyp/YOLOv10-OpenVINO-CPP-Inference/raw/model/assets/yolov10n_int8_openvino.zip)
