@@ -7,7 +7,7 @@ Implementing YOLOv10 object detection using OpenVINO for efficient and accurate 
 - [x] Support for `FP32`, `FP16` and `INT8` precisions
 - [x] Support for loading model with dynamic shape
 
-Tested on Ubuntu `18.04`, `20.04`, `22.04`.
+Tested on Ubuntu `18.04`, `20.04`, `22.04` `24.04`.
 
 ## Dependencies
 | Dependency | Version  |
@@ -60,6 +60,9 @@ sudo tar -xvf openvino.tgz
 sudo rm openvino.tgz
 sudo mv l_openvino* openvino
 ```
+
+- Download opevino [here](https://storage.openvinotoolkit.org/repositories/openvino/packages/2024.6/linux/l_openvino_toolkit_ubuntu24_2024.6.0.17404.4c0f47d2335_x86_64.tgz) for ubuntu24.04
+
 </details>
 
 <details>
